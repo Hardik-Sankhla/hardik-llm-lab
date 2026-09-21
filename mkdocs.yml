@@ -1,0 +1,94 @@
+site_name: Hardik LLM Lab
+site_description: Understanding language models by building, breaking, measuring, and rebuilding them.
+site_author: Hardik Sankhla
+site_url: https://hardik-sankhla.github.io/hardik-llm-lab
+repo_url: https://github.com/Hardik-Sankhla/hardik-llm-lab
+repo_name: Hardik-Sankhla/hardik-llm-lab
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.share
+    - content.code.copy
+    - content.code.annotate
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - admonition
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+  - tables
+  - attr_list
+  - md_in_html
+
+nav:
+  - Home: index.md
+  - Journey:
+      - Motivation: journey/motivation.md
+      - Methodology: journey/methodology.md
+      - Mistakes: journey/mistakes.md
+      - Lessons Learned: journey/lessons-learned.md
+  - Foundations:
+      - Tokenization: foundations/tokenization.md
+      - Embeddings: foundations/embeddings.md
+      - Attention: foundations/attention.md
+      - Transformers: foundations/transformers.md
+  - Training:
+      - Pretraining: training/pretraining.md
+      - Optimization: training/optimization.md
+      - Stability: training/stability.md
+  - Adaptation:
+      - Classification: adaptation/classification.md
+      - Instruction Tuning: adaptation/instruction-tuning.md
+      - LoRA: adaptation/lora.md
+  - Research:
+      - Experiments: research/experiments.md
+      - Ablations: research/ablations.md
+      - Benchmarks: research/benchmarks.md
+      - Failures: research/failures.md
+  - Decisions:
+      - ADR Index: decisions/index.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/Hardik-Sankhla
+    - icon: fontawesome/brands/linkedin
+      link: https://linkedin.com/in/hardik-sankhla
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX
+
+copyright: Copyright &copy; 2025 Hardik Sankhla - MIT License
