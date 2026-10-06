@@ -1,11 +1,10 @@
-# Combined pipeline: Security + Build/Test/Deploy
+# Combined pipeline: Security + Build/Test (no Pages deploy - use GitHub Pages)
 
 stages:
   - lint
   - test
   - security
   - build
-  - deploy-docs
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -66,22 +65,3 @@ build:
     paths:
       - dist/
     expire_in: 1 week
-
-pages:
-  stage: deploy-docs
-  needs: [test]
-  image: python:3.11-slim
-  before_script:
-    - pip install --upgrade pip
-    - pip install -e ".[dev]"
-  script:
-    - mkdocs build --strict
-    - mv site public  # GitLab Pages expects 'public' folder
-  artifacts:
-    paths:
-      - public
-    expire_in: 1 week
-  only:
-    - main
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main"
