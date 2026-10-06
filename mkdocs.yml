@@ -1,9 +1,9 @@
 site_name: Hardik LLM Lab
 site_description: Understanding language models by building, breaking, measuring, and rebuilding them.
 site_author: Hardik Sankhla
-site_url: https://hardik-sankhla.github.io/hardik-llm-lab
-repo_url: https://github.com/Hardik-Sankhla/hardik-llm-lab
-repo_name: Hardik-Sankhla/hardik-llm-lab
+site_url: https://hardik-sankhla.gitlab.io/hardik-llm-lab
+repo_url: https://gitlab.com/hardik-sankhla/hardik-llm-lab
+repo_name: hardik-sankhla/hardik-llm-lab
 
 theme:
   name: material

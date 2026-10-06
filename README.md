@@ -110,6 +110,12 @@ pip install -e ".[dev]"
 mkdocs serve
 ```
 
+The documentation is deployed to: https://hardik-sankhla.gitlab.io/hardik-llm-lab
+
+## Repository
+
+GitLab: https://gitlab.com/hardik-sankhla/hardik-llm-lab
+
 ## Attribution
 
 Learning foundation: This project was initially developed while studying *Build a Large Language Model (From Scratch)* by Sebastian Raschka (Manning Publications). The book served as a conceptual and educational reference.
