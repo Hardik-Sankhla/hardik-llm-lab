@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 import copy
 from dataclasses import dataclass, field
-from typing import list
+from typing import List
 
 
 # ============================================================
@@ -19,7 +19,7 @@ class LoRAConfig:
     rank: int = 4
     alpha: float = 16.0
     dropout: float = 0.0
-    target_modules: list[str] = field(default_factory=lambda: [
+    target_modules: List[str] = field(default_factory=lambda: [
         "qkv_proj", "out_proj", "fc1", "fc2"
     ])
 

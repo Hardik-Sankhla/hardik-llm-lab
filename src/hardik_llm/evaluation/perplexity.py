@@ -7,7 +7,7 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 import math
-from typing import list
+from typing import List
 
 
 @torch.no_grad()
@@ -32,12 +32,12 @@ def evaluate_perplexity(model: nn.Module, dataloader: DataLoader, device: str) -
 def evaluate_generation(
     model: nn.Module,
     tokenizer,
-    prompts: list[str],
+    prompts: List[str],
     max_new_tokens: int = 100,
     temperature: float = 0.8,
     top_k: int = 50,
     device: str = "cuda"
-) -> list[dict]:
+) -> List[dict]:
     """Generate text for given prompts."""
     model.eval()
     results = []
