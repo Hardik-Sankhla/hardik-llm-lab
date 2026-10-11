@@ -42,7 +42,7 @@ data/
 *.csv
 *.parquet
 *.jsonl
-
+dataset/
 # Logs
 *.log
 logs/
