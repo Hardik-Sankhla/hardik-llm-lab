@@ -1,6 +1,13 @@
 # Hardik LLM Lab
 
-> Understanding language models by building, breaking, measuring, and rebuilding them.
+> Understanding language models by building, breaking, measuring, and rebuilding them — from-scratch implementations, controlled experiments, and reproducible research.
+
+[![Python Version](https://img.shields.io/badge/python-3.11+-blue.svg)](https://python.org)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![CI Status](https://github.com/Hardik-Sankhla/hardik-llm-lab/actions/workflows/ci.yml/badge.svg)](https://github.com/Hardik-Sankhla/hardik-llm-lab/actions/workflows/ci.yml)
+[![Coverage](https://codecov.io/gh/Hardik-Sankhla/hardik-llm-lab/branch/main/graph/badge.svg)](https://codecov.io/gh/Hardik-Sankhla/hardik-llm-lab)
+[![PyPI Version](https://img.shields.io/pypi/v/hardik-llm-lab.svg)](https://pypi.org/project/hardik-llm-lab/)
+[![Documentation](https://img.shields.io/badge/docs-github.io-blue.svg)](https://hardik-sankhla.github.io/hardik-llm-lab)
 
 I started this project while studying *Build a Large Language Model (From Scratch)* by Sebastian Raschka.
 
@@ -84,6 +91,7 @@ hardik-llm-lab/
 │   ├── training/               # Training loop, optimizers, schedulers
 │   ├── finetuning/             # Classification, instruction tuning, LoRA
 │   ├── evaluation/             # Perplexity, benchmarks, generation
+│   ├── experiments/            # Experiment runners
 │   └── utils/                  # Logging, seeding, reproducibility
 ├── notebooks/                  # Research notebooks (one per concept)
 ├── experiments/                # Structured experiment registry
@@ -110,11 +118,11 @@ pip install -e ".[dev]"
 mkdocs serve
 ```
 
-The documentation is deployed to: https://hardik-sankhla.gitlab.io/hardik-llm-lab
+The documentation is deployed to: https://hardik-sankhla.github.io/hardik-llm-lab
 
 ## Repository
 
-GitLab: https://gitlab.com/hardik-sankhla/hardik-llm-lab
+GitHub: https://github.com/Hardik-Sankhla/hardik-llm-lab
 
 ## Attribution
 

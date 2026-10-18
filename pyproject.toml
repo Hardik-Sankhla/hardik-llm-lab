@@ -29,6 +29,13 @@ dependencies = [
     "tensorboard>=2.15",
 ]
 
+[project.urls]
+Homepage = "https://github.com/Hardik-Sankhla/hardik-llm-lab"
+Repository = "https://github.com/Hardik-Sankhla/hardik-llm-lab"
+Documentation = "https://hardik-sankhla.github.io/hardik-llm-lab"
+Issues = "https://github.com/Hardik-Sankhla/hardik-llm-lab/issues"
+Changelog = "https://github.com/Hardik-Sankhla/hardik-llm-lab/blob/main/CHANGELOG.md"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
@@ -63,7 +70,7 @@ packages = ["src/hardik_llm"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-select = ["E", "F", "I", "W", "UP", "B", "C4", "SIM", "PIE", "T20", "T10", "PER"]
+select = ["E", "F", "I", "W", "UP", "B", "C4", "SIM", "PIE", "T20", "T10"]
 ignore = ["S101", "T201"]
 
 [tool.ruff.format]

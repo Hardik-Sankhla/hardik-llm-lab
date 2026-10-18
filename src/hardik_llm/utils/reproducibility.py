@@ -1,8 +1,9 @@
 """Utility functions for logging, seeding, reproducibility."""
 
-import torch
 import random
+
 import numpy as np
+import torch
 
 
 def set_seed(seed: int):

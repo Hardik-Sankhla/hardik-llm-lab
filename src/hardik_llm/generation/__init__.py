@@ -1,24 +1,26 @@
 """Generation CLI."""
 
 import argparse
+
 import torch
-from hardik_llm.model import GPTModel, GPTConfig
+
+from hardik_llm.model import GPTConfig, GPTModel
 from hardik_llm.tokenizer import BPETokenizer, TokenizerConfig
 
 
 def main(args):
     # Load checkpoint
-    checkpoint = torch.load(args.checkpoint, map_location='cpu')
-    config = checkpoint['config'] if 'config' in checkpoint else GPTConfig()
+    checkpoint = torch.load(args.checkpoint, map_location="cpu")
+    config = checkpoint["config"] if "config" in checkpoint else GPTConfig()
     model = GPTModel(config)
-    model.load_state_dict(checkpoint['model'])
+    model.load_state_dict(checkpoint["model"])
     model.eval()
-    model.to('cuda' if torch.cuda.is_available() else 'cpu')
-    
+    model.to("cuda" if torch.cuda.is_available() else "cpu")
+
     # Load tokenizer
     tokenizer = BPETokenizer(TokenizerConfig())
     # TODO: Load trained tokenizer from checkpoint
-    
+
     # Generate
     device = next(model.parameters()).device
     input_ids = torch.tensor([tokenizer.encode(args.prompt)], device=device)

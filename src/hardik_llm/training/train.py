@@ -1,11 +1,13 @@
 """Training CLI entry point."""
 
 import argparse
+
 import yaml
-from hardik_llm.training import Trainer, TrainingConfig
-from hardik_llm.model import GPTModel, GPTConfig
+
+from hardik_llm.model import GPTConfig, GPTModel
 from hardik_llm.tokenizer import BPETokenizer, TokenizerConfig
-from hardik_llm.training.data import create_dataloaders, TextDataset
+from hardik_llm.training import Trainer, TrainingConfig
+from hardik_llm.training.data import create_dataloaders
 
 
 def main(args):
@@ -14,27 +16,26 @@ def main(args):
         model_config = yaml.safe_load(f)
     with open(args.config) as f:
         training_config = yaml.safe_load(f)
-    
+
     model_cfg = GPTConfig(**model_config)
     train_cfg = TrainingConfig(**training_config)
-    
+
     # Model
     model = GPTModel(model_cfg)
-    
+
     # Data - need to train tokenizer first or load
-    tokenizer = BPETokenizer(TokenizerConfig())
-    # TODO: Train or load tokenizer
+    _ = BPETokenizer(TokenizerConfig())  # placeholder; TODO: train or load tokenizer
     train_tokens = []  # placeholder
-    val_tokens = []    # placeholder
+    val_tokens = []  # placeholder
     train_loader, val_loader = create_dataloaders(train_tokens, val_tokens, train_cfg)
-    
+
     # Trainer
     trainer = Trainer(model, train_loader, val_loader, train_cfg)
-    
+
     # Resume if specified
     if args.resume:
         trainer.load_checkpoint(args.resume)
-    
+
     # Train
     trainer.train()
 

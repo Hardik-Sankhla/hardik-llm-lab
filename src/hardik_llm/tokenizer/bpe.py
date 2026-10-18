@@ -6,17 +6,17 @@ Implement following guide/01-tokenization/README.md
 import json
 import re
 from dataclasses import dataclass, field
-from typing import Optional, List
-import torch
 
 
 @dataclass
 class TokenizerConfig:
     vocab_size: int = 50257
-    special_tokens: dict[str, int] = field(default_factory=lambda: {
-        "<|endoftext|>": 50256,
-        "<|pad|>": 50257,
-    })
+    special_tokens: dict[str, int] = field(
+        default_factory=lambda: {
+            "<|endoftext|>": 50256,
+            "<|pad|>": 50257,
+        }
+    )
     # GPT-2 compatible regex pattern
     pattern: str = r"""'(?:[sdmt]|ll|ve|re)| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+"""
 
@@ -32,7 +32,7 @@ class BPETokenizer:
         self.vocab_size = config.vocab_size
         self.special_tokens = config.special_tokens
         self.merges = {}  # (int, int) -> int
-        self.vocab = {}   # int -> bytes
+        self.vocab = {}  # int -> bytes
         self._trained = False
         self._pattern = None
         self._special_token_ids = set(config.special_tokens.values())
@@ -43,10 +43,12 @@ class BPETokenizer:
         # Use regex module if available for \p{L} support, else fallback
         try:
             import regex
+
             self._pattern = regex.compile(self.config.pattern)
         except ImportError:
             # Fallback to basic pattern without Unicode properties
-            self._pattern = re.compile(r"""'(?:[sdmt]|ll|ve|re)| ?[a-zA-Z]+| ?[0-9]+| ?[^\s\w]+|\s+(?!\S)|\s+""")
+            fallback_pattern = r"'(?:[sdmt]|ll|ve|re)| ?[a-zA-Z]+| ?[0-9]+| ?[^\s\w]+|\s+(?!\S)|\s+"
+            self._pattern = re.compile(fallback_pattern)
 
     def train(self, text: str, verbose: bool = False):
         """Train BPE on text. Build merges and vocab."""
@@ -59,10 +61,10 @@ class BPETokenizer:
 
         # Add special tokens to vocab
         for token, token_id in self.special_tokens.items():
-            self.vocab[token_id] = token.encode('utf-8')
+            self.vocab[token_id] = token.encode("utf-8")
 
         # Encode text to byte IDs
-        ids = list(text.encode('utf-8'))
+        ids = list(text.encode("utf-8"))
 
         # Train merges until vocab_size reached
         num_merges = self.vocab_size - 256 - len(self.special_tokens)
@@ -101,7 +103,7 @@ class BPETokenizer:
         if verbose:
             print(f"Training complete. Vocab size: {len(self.vocab)}, Merges: {len(self.merges)}")
 
-    def encode(self, text: str) -> List[int]:
+    def encode(self, text: str) -> list[int]:
         """Encode text to token IDs using learned merges."""
         if not self._trained:
             raise RuntimeError("Tokenizer not trained. Call train() first.")
@@ -123,7 +125,7 @@ class BPETokenizer:
 
         return self._encode_ordinary(text)
 
-    def _encode_ordinary(self, text: str) -> List[int]:
+    def _encode_ordinary(self, text: str) -> list[int]:
         """Encode text without special tokens."""
         assert self._pattern is not None, "Pattern not compiled. Call train() first."
 
@@ -133,7 +135,7 @@ class BPETokenizer:
 
         for chunk in chunks:
             # Encode chunk to bytes
-            chunk_bytes = chunk.encode('utf-8')
+            chunk_bytes = chunk.encode("utf-8")
             chunk_ids = list(chunk_bytes)
 
             # Apply merges
@@ -142,7 +144,7 @@ class BPETokenizer:
 
         return ids
 
-    def _apply_merges(self, ids: List[int]) -> List[int]:
+    def _apply_merges(self, ids: list[int]) -> list[int]:
         """Apply all learned merges to a list of token IDs."""
         if not self.merges:
             return ids
@@ -152,7 +154,7 @@ class BPETokenizer:
             ids = merge(ids, pair, new_id)
         return ids
 
-    def decode(self, ids: List[int]) -> str:
+    def decode(self, ids: list[int]) -> str:
         """Decode token IDs back to text."""
         if not ids:
             return ""
@@ -162,56 +164,54 @@ class BPETokenizer:
         for token_id in ids:
             if token_id in self._id_to_special:
                 # Special token - encode its string representation
-                parts.append(self._id_to_special[token_id].encode('utf-8'))
+                parts.append(self._id_to_special[token_id].encode("utf-8"))
             elif token_id in self.vocab:
                 parts.append(self.vocab[token_id])
             else:
                 # Unknown token - use replacement character
-                parts.append(b'\xef\xbf\xbd')
+                parts.append(b"\xef\xbf\xbd")
 
-        text_bytes = b''.join(parts)
-        return text_bytes.decode('utf-8', errors='replace')
+        text_bytes = b"".join(parts)
+        return text_bytes.decode("utf-8", errors="replace")
 
     def save(self, path: str):
         """Save tokenizer to JSON file."""
         # Ensure special tokens are in vocab for saving
         vocab_to_save = self.vocab.copy()
         for token, token_id in self.special_tokens.items():
-            vocab_to_save[token_id] = token.encode('utf-8')
+            vocab_to_save[token_id] = token.encode("utf-8")
 
         data = {
-            'vocab_size': self.vocab_size,
-            'special_tokens': self.special_tokens,
-            'pattern': self.config.pattern,
-            'merges': {f"{a},{b}": v for (a, b), v in self.merges.items()},
-            'vocab': {k: list(v) for k, v in vocab_to_save.items()},
+            "vocab_size": self.vocab_size,
+            "special_tokens": self.special_tokens,
+            "pattern": self.config.pattern,
+            "merges": {f"{a},{b}": v for (a, b), v in self.merges.items()},
+            "vocab": {k: list(v) for k, v in vocab_to_save.items()},
         }
-        with open(path, 'w', encoding='utf-8') as f:
+        with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
     @classmethod
     def load(cls, path: str) -> "BPETokenizer":
         """Load tokenizer from JSON file."""
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(path, encoding="utf-8") as f:
             data = json.load(f)
 
         config = TokenizerConfig(
-            vocab_size=data['vocab_size'],
-            special_tokens=data['special_tokens'],
-            pattern=data['pattern'],
+            vocab_size=data["vocab_size"],
+            special_tokens=data["special_tokens"],
+            pattern=data["pattern"],
         )
         tokenizer = cls(config)
-        tokenizer.merges = {
-            tuple(map(int, k.split(','))): v for k, v in data['merges'].items()
-        }
+        tokenizer.merges = {tuple(map(int, k.split(","))): v for k, v in data["merges"].items()}
         # Convert string keys back to int (JSON keys are always strings)
-        tokenizer.vocab = {int(k): bytes(v) for k, v in data['vocab'].items()}
+        tokenizer.vocab = {int(k): bytes(v) for k, v in data["vocab"].items()}
         tokenizer._trained = True
         tokenizer._compile_pattern()
         return tokenizer
 
 
-def get_stats(ids: List[int]) -> dict[tuple[int, int], int]:
+def get_stats(ids: list[int]) -> dict[tuple[int, int], int]:
     """Count frequency of adjacent pairs."""
     stats = {}
     for i in range(len(ids) - 1):
@@ -220,7 +220,7 @@ def get_stats(ids: List[int]) -> dict[tuple[int, int], int]:
     return stats
 
 
-def merge(ids: List[int], pair: tuple[int, int], new_id: int) -> List[int]:
+def merge(ids: list[int], pair: tuple[int, int], new_id: int) -> list[int]:
     """Replace all occurrences of pair with new_id."""
     if len(ids) < 2:
         return ids
@@ -240,5 +240,13 @@ def merge(ids: List[int], pair: tuple[int, int], new_id: int) -> List[int]:
 
 
 # Alias for backward compatibility
-encode_batch = lambda tokenizer, texts, max_length, padding=True: None
-decode_batch = lambda tokenizer, ids: None
+def encode_batch(
+    tokenizer: "BPETokenizer", texts: list[str], max_length: int, padding: bool = True
+) -> list[list[int]]:
+    """Batch encode with padding/truncation (stub)."""
+    return [tokenizer.encode(text)[:max_length] for text in texts]
+
+
+def decode_batch(tokenizer: "BPETokenizer", ids: list[list[int]]) -> list[str]:
+    """Batch decode (stub)."""
+    return [tokenizer.decode(seq) for seq in ids]

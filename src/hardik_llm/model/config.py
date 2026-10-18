@@ -6,6 +6,7 @@ from dataclasses import dataclass
 @dataclass
 class GPTConfig:
     """GPT model configuration."""
+
     vocab_size: int = 50257
     max_seq_len: int = 1024
     d_model: int = 768

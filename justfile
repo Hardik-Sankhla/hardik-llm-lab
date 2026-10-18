@@ -1,4 +1,4 @@
-# Hardik LLM Lab - Justfile (modern command runner)
+# LLM Lab - Justfile (modern command runner)
 # Install: cargo install just  OR  pip install just
 # Usage: just <recipe>
 

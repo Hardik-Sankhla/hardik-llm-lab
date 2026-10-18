@@ -1,11 +1,11 @@
-# Hardik LLM Lab - Development Commands
+# LLM Lab - Development Commands
 # Usage: make <target>
 
 .PHONY: help install test lint format typecheck build-docs serve-docs clean
 
 # Default target
 help:
-	@echo "Hardik LLM Lab - Development Commands"
+	@echo "LLM Lab - Development Commands"
 	@echo ""
 	@echo "Setup:"
 	@echo "  make install        Install package in development mode with all deps"
