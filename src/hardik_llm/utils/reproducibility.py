@@ -1,12 +1,14 @@
 """Utility functions for logging, seeding, reproducibility."""
 
+from __future__ import annotations
+
 import random
 
 import numpy as np
 import torch
 
 
-def set_seed(seed: int):
+def set_seed(seed: int) -> None:
     """Set all random seeds for reproducibility."""
     random.seed(seed)
     np.random.seed(seed)

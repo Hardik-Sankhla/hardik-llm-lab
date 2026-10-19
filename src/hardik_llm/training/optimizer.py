@@ -10,15 +10,17 @@ from typing import TYPE_CHECKING
 
 import torch
 import torch.nn as nn
+from torch.optim import Optimizer
+from torch.optim.lr_scheduler import LambdaLR
 
 if TYPE_CHECKING:
     from hardik_llm.training.config import TrainingConfig
 
 
-def create_optimizer(model: nn.Module, config: TrainingConfig):
+def create_optimizer(model: nn.Module, config: TrainingConfig) -> Optimizer:
     """Create AdamW optimizer with proper weight decay grouping."""
-    decay_params = []
-    no_decay_params = []
+    decay_params: list[nn.Parameter] = []
+    no_decay_params: list[nn.Parameter] = []
 
     for name, param in model.named_parameters():
         if not param.requires_grad:
@@ -47,10 +49,10 @@ def create_optimizer(model: nn.Module, config: TrainingConfig):
     return optimizer
 
 
-def create_scheduler(optimizer, config: TrainingConfig):
+def create_scheduler(optimizer: Optimizer, config: TrainingConfig) -> LambdaLR:
     """Create cosine decay with warmup scheduler."""
 
-    def lr_lambda(step):
+    def lr_lambda(step: int) -> float:
         if step < config.warmup_steps:
             return step / config.warmup_steps
         # Cosine decay
@@ -62,7 +64,7 @@ def create_scheduler(optimizer, config: TrainingConfig):
             + (1 - config.min_lr / config.learning_rate) * cosine
         )
 
-    return torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda)
+    return LambdaLR(optimizer, lr_lambda)
 
 
 def get_grad_norm(model: nn.Module) -> float:

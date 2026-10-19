@@ -1,5 +1,7 @@
 """Training CLI entry point."""
 
+from __future__ import annotations
+
 import argparse
 
 import yaml
@@ -10,7 +12,7 @@ from hardik_llm.training import Trainer, TrainingConfig
 from hardik_llm.training.data import create_dataloaders
 
 
-def main(args):
+def main(args: argparse.Namespace) -> None:
     # Load configs
     with open(args.model_config) as f:
         model_config = yaml.safe_load(f)
@@ -25,8 +27,8 @@ def main(args):
 
     # Data - need to train tokenizer first or load
     _ = BPETokenizer(TokenizerConfig())  # placeholder; TODO: train or load tokenizer
-    train_tokens = []  # placeholder
-    val_tokens = []  # placeholder
+    train_tokens: list[int] = []  # placeholder
+    val_tokens: list[int] = []  # placeholder
     train_loader, val_loader = create_dataloaders(train_tokens, val_tokens, train_cfg)
 
     # Trainer

@@ -1,10 +1,12 @@
 """CLI entry points for hardik_llm."""
 
+from __future__ import annotations
+
 import argparse
 import sys
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(prog="hardik-llm")
     subparsers = parser.add_subparsers(dest="command", required=True)
 

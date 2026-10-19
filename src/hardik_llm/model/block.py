@@ -3,6 +3,8 @@
 Implement in guide/04-transformer/
 """
 
+from __future__ import annotations
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -14,7 +16,7 @@ from hardik_llm.model.config import GPTConfig
 class MLP(nn.Module):
     """MLP block with GeLU activation (4x expansion)."""
 
-    def __init__(self, d_model: int, dropout: float = 0.1):
+    def __init__(self, d_model: int, dropout: float = 0.1) -> None:
         super().__init__()
         self.fc1 = nn.Linear(d_model, 4 * d_model)
         self.fc2 = nn.Linear(4 * d_model, d_model)
@@ -28,7 +30,7 @@ class MLP(nn.Module):
 class TransformerBlock(nn.Module):
     """Pre-Norm Transformer Block."""
 
-    def __init__(self, config: GPTConfig):
+    def __init__(self, config: GPTConfig) -> None:
         super().__init__()
         self.ln1 = nn.LayerNorm(config.d_model)
         self.attn = CausalSelfAttention(

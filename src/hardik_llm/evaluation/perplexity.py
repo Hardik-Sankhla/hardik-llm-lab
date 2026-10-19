@@ -3,7 +3,10 @@
 Implement in guide/08-evaluation/
 """
 
+from __future__ import annotations
+
 import math
+from typing import Any
 
 import torch
 import torch.nn as nn
@@ -11,7 +14,7 @@ from torch.utils.data import DataLoader
 
 
 @torch.no_grad()
-def evaluate_perplexity(model: nn.Module, dataloader: DataLoader, device: str) -> float:
+def evaluate_perplexity(model: nn.Module, dataloader: DataLoader[Any], device: str) -> float:
     """Compute perplexity on validation set."""
     model.eval()
     total_loss = 0.0
@@ -31,16 +34,16 @@ def evaluate_perplexity(model: nn.Module, dataloader: DataLoader, device: str) -
 @torch.no_grad()
 def evaluate_generation(
     model: nn.Module,
-    tokenizer,
+    tokenizer: Any,
     prompts: list[str],
     max_new_tokens: int = 100,
     temperature: float = 0.8,
     top_k: int = 50,
     device: str = "cuda",
-) -> list[dict]:
+) -> list[dict[str, Any]]:
     """Generate text for given prompts."""
     model.eval()
-    results = []
+    results: list[dict[str, Any]] = []
 
     for prompt in prompts:
         input_ids = torch.tensor([tokenizer.encode(prompt)], device=device)
@@ -60,7 +63,7 @@ def evaluate_generation(
 
 
 @torch.no_grad()
-def evaluate_next_token_accuracy(model: nn.Module, dataloader: DataLoader, device: str) -> float:
+def evaluate_next_token_accuracy(model: nn.Module, dataloader: DataLoader[Any], device: str) -> float:
     """Next-token prediction accuracy on validation set."""
     model.eval()
     correct = 0

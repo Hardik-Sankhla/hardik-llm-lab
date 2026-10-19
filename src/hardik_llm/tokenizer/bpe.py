@@ -3,9 +3,17 @@
 Implement following guide/01-tokenization/README.md
 """
 
+from __future__ import annotations
+
 import json
 import re
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    import regex
+
+from regex import Pattern
 
 
 @dataclass
@@ -27,18 +35,18 @@ class BPETokenizer:
     Implements BPE from first principles following the guide.
     """
 
-    def __init__(self, config: TokenizerConfig):
+    def __init__(self, config: TokenizerConfig) -> None:
         self.config = config
         self.vocab_size = config.vocab_size
         self.special_tokens = config.special_tokens
-        self.merges = {}  # (int, int) -> int
-        self.vocab = {}  # int -> bytes
+        self.merges: dict[tuple[int, int], int] = {}  # (int, int) -> int
+        self.vocab: dict[int, bytes] = {}  # int -> bytes
         self._trained = False
-        self._pattern = None
+        self._pattern: Pattern[str] | None = None
         self._special_token_ids = set(config.special_tokens.values())
         self._id_to_special = {v: k for k, v in config.special_tokens.items()}
 
-    def _compile_pattern(self):
+    def _compile_pattern(self) -> None:
         """Compile the regex pattern for tokenization."""
         # Use regex module if available for \p{L} support, else fallback
         try:
@@ -50,7 +58,7 @@ class BPETokenizer:
             fallback_pattern = r"'(?:[sdmt]|ll|ve|re)| ?[a-zA-Z]+| ?[0-9]+| ?[^\s\w]+|\s+(?!\S)|\s+"
             self._pattern = re.compile(fallback_pattern)
 
-    def train(self, text: str, verbose: bool = False):
+    def train(self, text: str, verbose: bool = False) -> None:
         """Train BPE on text. Build merges and vocab."""
         if verbose:
             print(f"Training BPE on {len(text):,} characters...")
@@ -174,7 +182,7 @@ class BPETokenizer:
         text_bytes = b"".join(parts)
         return text_bytes.decode("utf-8", errors="replace")
 
-    def save(self, path: str):
+    def save(self, path: str) -> None:
         """Save tokenizer to JSON file."""
         # Ensure special tokens are in vocab for saving
         vocab_to_save = self.vocab.copy()
@@ -213,7 +221,7 @@ class BPETokenizer:
 
 def get_stats(ids: list[int]) -> dict[tuple[int, int], int]:
     """Count frequency of adjacent pairs."""
-    stats = {}
+    stats: dict[tuple[int, int], int] = {}
     for i in range(len(ids) - 1):
         pair = (ids[i], ids[i + 1])
         stats[pair] = stats.get(pair, 0) + 1

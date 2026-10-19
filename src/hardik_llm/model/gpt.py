@@ -3,6 +3,10 @@
 Implement in guide/04-transformer/
 """
 
+from __future__ import annotations
+
+from typing import Optional
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -15,7 +19,7 @@ from hardik_llm.model.embeddings import GPTEmbeddings
 class GPTModel(nn.Module):
     """GPT-style Language Model."""
 
-    def __init__(self, config: GPTConfig):
+    def __init__(self, config: GPTConfig) -> None:
         super().__init__()
         self.config = config
 
@@ -32,7 +36,7 @@ class GPTModel(nn.Module):
         # Initialize weights
         self.apply(self._init_weights)
 
-    def _init_weights(self, module):
+    def _init_weights(self, module: nn.Module) -> None:
         if isinstance(module, nn.Linear):
             nn.init.normal_(module.weight, mean=0.0, std=0.02)
             if module.bias is not None:
@@ -43,7 +47,9 @@ class GPTModel(nn.Module):
             nn.init.ones_(module.weight)
             nn.init.zeros_(module.bias)
 
-    def forward(self, input_ids: torch.Tensor, targets: torch.Tensor = None):
+    def forward(
+        self, input_ids: torch.Tensor, targets: Optional[torch.Tensor] = None
+    ) -> tuple[torch.Tensor, Optional[torch.Tensor]]:
         # input_ids: [B, T]
         x = self.embeddings(input_ids)
 
@@ -67,8 +73,8 @@ class GPTModel(nn.Module):
         input_ids: torch.Tensor,
         max_new_tokens: int,
         temperature: float = 1.0,
-        top_k: int = None,
-    ):
+        top_k: Optional[int] = None,
+    ) -> torch.Tensor:
         """Autoregressive generation."""
         for _ in range(max_new_tokens):
             # Crop to max_seq_len
@@ -86,7 +92,7 @@ class GPTModel(nn.Module):
 
         return input_ids
 
-    def get_num_params(self, non_embedding: bool = True):
+    def get_num_params(self, non_embedding: bool = True) -> int:
         """Return number of parameters."""
         n_params = sum(p.numel() for p in self.parameters())
         if non_embedding and self.config.tie_weights:

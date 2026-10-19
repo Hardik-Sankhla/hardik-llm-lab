@@ -14,23 +14,27 @@ if TYPE_CHECKING:
     from hardik_llm.training.config import TrainingConfig
 
 
-class TextDataset(Dataset):
+class TextDataset(Dataset[tuple[torch.Tensor, torch.Tensor]]):
     """Dataset for next-token prediction from token sequences."""
 
-    def __init__(self, tokens: list[int], max_seq_len: int):
+    def __init__(self, tokens: list[int], max_seq_len: int) -> None:
         self.tokens = tokens
         self.max_seq_len = max_seq_len
 
-    def __len__(self):
+    def __len__(self) -> int:
         return max(0, len(self.tokens) - self.max_seq_len)
 
-    def __getitem__(self, idx):
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
         x = torch.tensor(self.tokens[idx : idx + self.max_seq_len], dtype=torch.long)
-        y = torch.tensor(self.tokens[idx + 1 : idx + 1 + self.max_seq_len], dtype=torch.long)
+        y = torch.tensor(
+            self.tokens[idx + 1 : idx + 1 + self.max_seq_len], dtype=torch.long
+        )
         return x, y
 
 
-def create_dataloaders(train_tokens, val_tokens, config: TrainingConfig):
+def create_dataloaders(
+    train_tokens: list[int], val_tokens: list[int], config: TrainingConfig
+) -> tuple[DataLoader[tuple[torch.Tensor, torch.Tensor]], DataLoader[tuple[torch.Tensor, torch.Tensor]]]:
     """Create train and validation dataloaders."""
     train_ds = TextDataset(train_tokens, config.max_seq_len)
     val_ds = TextDataset(val_tokens, config.max_seq_len)

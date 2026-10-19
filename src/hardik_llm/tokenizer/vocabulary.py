@@ -3,6 +3,8 @@
 Implement in guide/01-tokenization/
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass, field
 
 
@@ -13,7 +15,7 @@ class Vocabulary:
     token_to_id: dict[str, int] = field(default_factory=dict)
     id_to_token: dict[int, str] = field(default_factory=dict)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.token_to_id)
 
     def add_token(self, token: str) -> int:
@@ -24,12 +26,12 @@ class Vocabulary:
             self.id_to_token[idx] = token
         return self.token_to_id[token]
 
-    def __getitem__(self, key):
+    def __getitem__(self, key: str | int) -> int | str:
         if isinstance(key, str):
             return self.token_to_id[key]
         return self.id_to_token[key]
 
-    def __contains__(self, key):
+    def __contains__(self, key: str | int) -> bool:
         if isinstance(key, str):
             return key in self.token_to_id
         return key in self.id_to_token

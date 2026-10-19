@@ -3,6 +3,8 @@
 Implement in guide/02-embeddings/ and guide/04-transformer/
 """
 
+from __future__ import annotations
+
 import math
 from dataclasses import dataclass, field
 
@@ -24,7 +26,7 @@ class GPTConfig:
 
     d_head: int = field(init=False)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self.d_head = self.d_model // self.n_heads
         assert self.d_model % self.n_heads == 0, "d_model must be divisible by n_heads"
 
@@ -32,7 +34,7 @@ class GPTConfig:
 class TokenEmbedding(nn.Module):
     """Token embeddings with optional padding index."""
 
-    def __init__(self, vocab_size: int, d_model: int, pad_token_id: int = None):
+    def __init__(self, vocab_size: int, d_model: int, pad_token_id: int | None = None) -> None:
         super().__init__()
         self.embedding = nn.Embedding(vocab_size, d_model, padding_idx=pad_token_id)
         nn.init.normal_(self.embedding.weight, mean=0.0, std=0.02)
@@ -46,7 +48,7 @@ class TokenEmbedding(nn.Module):
 class SinusoidalPositionalEmbedding(nn.Module):
     """Fixed sinusoidal positional encodings."""
 
-    def __init__(self, max_len: int, d_model: int):
+    def __init__(self, max_len: int, d_model: int) -> None:
         super().__init__()
         pe = torch.zeros(max_len, d_model)
         position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
@@ -63,7 +65,7 @@ class SinusoidalPositionalEmbedding(nn.Module):
 class LearnedPositionalEmbedding(nn.Module):
     """Learned positional embeddings (GPT-style)."""
 
-    def __init__(self, max_len: int, d_model: int):
+    def __init__(self, max_len: int, d_model: int) -> None:
         super().__init__()
         self.pe = nn.Embedding(max_len, d_model)
         nn.init.normal_(self.pe.weight, mean=0.0, std=0.02)
@@ -77,7 +79,7 @@ class LearnedPositionalEmbedding(nn.Module):
 class GPTEmbeddings(nn.Module):
     """Combined token + positional embeddings."""
 
-    def __init__(self, config: GPTConfig):
+    def __init__(self, config: GPTConfig) -> None:
         super().__init__()
         self.token_emb = TokenEmbedding(config.vocab_size, config.d_model, config.pad_token_id)
         self.pos_emb = LearnedPositionalEmbedding(config.max_seq_len, config.d_model)
